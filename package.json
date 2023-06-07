@@ -12,9 +12,12 @@
     "@remix-run/node": "^1.17.0",
     "@remix-run/react": "^1.17.0",
     "@remix-run/serve": "^1.17.0",
+    "@vargtech/notion-render": "0.0.5",
+    "@vargtech/notion-utils": "0.1.0",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.17.0",
