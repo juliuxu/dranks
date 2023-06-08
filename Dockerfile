@@ -32,6 +32,7 @@ FROM gcr.io/distroless/nodejs${NODE_VERSION}-debian11
 # Copy built application
 COPY --from=build /app /app
 
-# Start the server by default, this can be overwritten at runtime
+WORKDIR /app
+
 EXPOSE 3000
 CMD [ "/app/node_modules/.bin/remix-serve", "/app/build" ]
