@@ -2,13 +2,13 @@ import type {
   BlockObjectResponse,
   DatabaseObjectResponse,
   PageObjectResponse,
-} from "@vargtech/notion-utils";
+} from "@julianjark/notion-utils";
 import {
   getTitle,
   getCover,
   getSelectAndColor,
   getMultiSelect,
-} from "@vargtech/notion-utils";
+} from "@julianjark/notion-utils";
 import type { DrinksMetainfo, Drink, DrinkNotionBlocksBody } from "./schema";
 import { drinkNotionBlocksBodySchema } from "./schema";
 import { drinkSchema } from "./schema";
@@ -20,7 +20,7 @@ import { takeItemsIfHeaderMatches } from "./utils";
 export function parseDrinksMetainfo(fromDatabase: DatabaseObjectResponse) {
   const alcohol = fromDatabase.properties["Alkohol"];
   return drinksMetainfo.parse({
-    alchohol:
+    alchohols:
       alcohol?.type === "select"
         ? alcohol.select.options.map(({ name, color }) => ({
             title: name,

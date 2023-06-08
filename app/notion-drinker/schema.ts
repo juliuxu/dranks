@@ -1,18 +1,19 @@
 import { z } from "zod";
-import type { BlockObjectResponse } from "@vargtech/notion-utils";
+import type { BlockObjectResponse } from "@julianjark/notion-utils";
 
 const blockSchema = z.custom<BlockObjectResponse>((val) => {
   if ((val as BlockObjectResponse)?.type === "unsupported") return false;
   return true;
 });
 
+const alcoholSchema = z.object({
+  title: z.string(),
+  color: z.string(),
+});
+export type Alcohol = z.infer<typeof alcoholSchema>;
+
 export const drinksMetainfo = z.object({
-  alchohol: z.array(
-    z.object({
-      title: z.string(),
-      color: z.string(),
-    })
-  ),
+  alchohols: z.array(alcoholSchema),
   lastEditedTime: z.string(),
 });
 export type DrinksMetainfo = z.infer<typeof drinksMetainfo>;
@@ -22,10 +23,7 @@ export const drinkSchema = z.object({
   id: z.string(),
   title: z.string(),
   illustrationUrl: z.string().optional(),
-  alcohol: z.object({
-    title: z.string(),
-    color: z.string(),
-  }),
+  alcohol: alcoholSchema,
   tags: z.array(z.string()),
   groups: z.array(z.string()),
 });

@@ -1,5 +1,5 @@
-import type { BlockObjectResponse } from "@vargtech/notion-utils";
-import { getTextFromRichText } from "@vargtech/notion-utils";
+import type { BlockObjectResponse } from "@julianjark/notion-utils";
+import { getTextFromRichText } from "@julianjark/notion-utils";
 import type { z } from "zod";
 
 // Like the built-in Partial, but requires all keys

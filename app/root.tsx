@@ -9,13 +9,29 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import fontComico from "~/styles/font-comico.css";
+import fontSatoshi from "~/styles/font-satoshi.css";
+import tailwind from "~/styles/tailwind.css";
+
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  {
+    rel: "stylesheet",
+    href: tailwind,
+  },
+  {
+    rel: "stylesheet",
+    href: fontComico,
+  },
+  {
+    rel: "stylesheet",
+    href: fontSatoshi,
+  },
 ];
 
 export default function App() {
   return (
-    <html lang="en">
+    <html lang="no">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />

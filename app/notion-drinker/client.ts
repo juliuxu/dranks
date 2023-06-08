@@ -1,4 +1,4 @@
-import { getClient } from "@vargtech/notion-utils";
+import { getClient } from "@julianjark/notion-utils";
 import {
   parseDrink,
   parseDrinksMetainfo,
