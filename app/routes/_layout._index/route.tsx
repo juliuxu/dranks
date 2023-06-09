@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from "react";
+import { Fragment } from "react";
 import type {
   HeadersFunction,
   LoaderArgs,
@@ -7,19 +7,17 @@ import type {
 import { json } from "@remix-run/node";
 import {
   Form,
-  Link,
   useLoaderData,
   useNavigation,
   useSubmit,
 } from "@remix-run/react";
 
 import { dranksClasses } from "../_layout/route";
-import { getDrinks, getDrinksMetainfo } from "~/notion-drinker/client";
-import { config } from "~/config.server";
 import { z } from "zod";
-import { debounce } from "~/utils";
-import type { Alcohol, Drink } from "~/notion-drinker/schema";
-import { slugify } from "@julianjark/notion-utils";
+import { useDebounceEffect } from "~/utils";
+import type { Alcohol } from "~/notion-drinker/schema";
+import { DrankCard } from "./drink-card";
+import { drinksClient } from "~/clients.server";
 
 const querySchema = z.object({
   q: z.string().optional(),
@@ -31,22 +29,15 @@ const querySchema = z.object({
 
 export const loader = async ({ request }: LoaderArgs) => {
   const startFetchTime = performance.now();
-  const [drinks, drinksMetainfo] = await Promise.all([
-    getDrinks({
-      notionToken: config.notionToken,
-      notionDatabaseId: config.drinksDatabaseId,
-    }),
-    getDrinksMetainfo({
-      notionToken: config.notionToken,
-      notionDatabaseId: config.drinksDatabaseId,
-    }),
-  ]);
+  const { drinks, drinksMetainfo } = await drinksClient.getDrinksAndMetaInfo();
   const fetchTime = Math.round(performance.now() - startFetchTime);
 
   // Filtering
-  const filter = querySchema.parse(
-    Object.fromEntries(new URL(request.url).searchParams.entries())
-  );
+  const { searchParams } = new URL(request.url);
+  const filter = querySchema.parse({
+    ...Object.fromEntries(searchParams.entries()),
+    alcohols: searchParams.getAll("alcohols"),
+  });
   const drinksFiltered = drinks
     .filter((drink) => {
       if (!filter.q) return true;
@@ -62,11 +53,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     });
 
   // Ordering
-  const alcohols = drinksMetainfo.alchohols.filter((alcohol) =>
-    drinks.some((drink) => drink.alcohol.title === alcohol.title)
-  );
-
-  const drinksByAlcohol = alcohols.map((alcohol) => ({
+  const drinksByAlcohol = drinksMetainfo.alcohols.map((alcohol) => ({
     alcohol,
     drinks: drinksFiltered.filter(
       (drink) => drink.alcohol.title === alcohol.title
@@ -75,7 +62,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return json(
     {
-      alcohols,
+      alcohols: drinksMetainfo.alcohols,
       drinks: drinksFiltered,
       drinksByAlcohol,
       filter,
@@ -99,7 +86,7 @@ export default function Dranks() {
   const data = useLoaderData<typeof loader>();
 
   const submit = useSubmit();
-  const submitDebounced = useMemo(() => debounce(submit, 200), []);
+  const submitDebounced = useDebounceEffect(submit, 200);
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
@@ -197,33 +184,3 @@ export default function Dranks() {
     </>
   );
 }
-
-interface DrinkCardProps {
-  drink: Drink;
-  index: number;
-}
-const DrankCard = ({ drink, index }: DrinkCardProps) => {
-  return (
-    <Link prefetch="intent" to={`${slugify(drink.title)}`} preventScrollReset>
-      <div className="group relative bg-gradient-to-b from-cyan-400 via-green-200 to-yellow-200">
-        {/* <Image
-          width={300}
-          aspectRatio={1 / 1.2}
-          src={drank.Illustrasjon}
-          transformer={unpicTransformer}
-          priority={index < 6}
-          className="transition-all duration-300 ease-in-out group-hover:scale-[1.1]"
-          background="auto"
-          style={{ backgroundPosition: "center" }}
-        /> */}
-        <img src={drink.illustrationUrl} alt="" />
-        <span
-          className="absolute bottom-0 p-4 text-2xl font-semibold text-white drop-shadow-lg"
-          style={{ textShadow: "0 0 10px rgb(0 0 0 / 33%)" }}
-        >
-          {drink.title}
-        </span>
-      </div>
-    </Link>
-  );
-};

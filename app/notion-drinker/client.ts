@@ -7,8 +7,9 @@ import {
   safeParseNotionDrinkBody,
 } from "./parser";
 import { typedBoolean } from "./utils";
+import type { Drink, DrinksMetainfo } from "./schema";
 
-interface NotionTokenAndDatabaseId {
+export interface NotionTokenAndDatabaseId {
   notionToken: string;
   notionDatabaseId: string;
 }
@@ -39,6 +40,38 @@ export async function getDrinks({
     console.error("Failed to parse the following drinks", unparsed);
   }
   return drinks;
+}
+
+export async function getDrinksAndMetaInfo({
+  notionToken,
+  notionDatabaseId,
+}: NotionTokenAndDatabaseId): Promise<{
+  drinks: Drink[];
+  drinksMetainfo: DrinksMetainfo;
+}> {
+  const [drinks, drinksMetainfo] = await Promise.all([
+    getDrinks({
+      notionToken,
+      notionDatabaseId,
+    }),
+    getDrinksMetainfo({
+      notionToken,
+      notionDatabaseId,
+    }),
+  ]);
+
+  return {
+    drinks,
+    drinksMetainfo: {
+      ...drinksMetainfo,
+
+      // Ensure that the alcohols in the metainfo are only those that are actually
+      // present in the drinks
+      alcohols: drinksMetainfo.alcohols.filter((alcohol) =>
+        drinks.some((drink) => drink.alcohol.title === alcohol.title)
+      ),
+    },
+  };
 }
 
 export async function getDrinksWithNotionBodies({

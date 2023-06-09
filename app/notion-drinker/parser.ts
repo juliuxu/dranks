@@ -20,7 +20,7 @@ import { takeItemsIfHeaderMatches } from "./utils";
 export function parseDrinksMetainfo(fromDatabase: DatabaseObjectResponse) {
   const alcohol = fromDatabase.properties["Alkohol"];
   return drinksMetainfo.parse({
-    alchohols:
+    alcohols:
       alcohol?.type === "select"
         ? alcohol.select.options.map(({ name, color }) => ({
             title: name,

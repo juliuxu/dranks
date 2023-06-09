@@ -1,4 +1,6 @@
-export function debounce<Args extends Array<unknown>>(
+import { useMemo, useRef } from "react";
+
+export function debounceEffect<Args extends Array<unknown>>(
   fn: (...args: Args) => unknown,
   ms: number
 ) {
@@ -7,6 +9,16 @@ export function debounce<Args extends Array<unknown>>(
     clearTimeout(timeout);
     timeout = setTimeout(() => fn(...args), ms);
   };
+}
+export function useDebounceEffect<Args extends Array<unknown>>(
+  fn: (...args: Args) => unknown,
+  ms: number
+) {
+  const de = useRef<(...args: Args) => unknown>();
+  if (de.current === undefined) {
+    de.current = () => debounceEffect(fn, ms);
+  }
+  return de.current;
 }
 
 export function assertItemFound<T>(item: T | undefined): asserts item is T {

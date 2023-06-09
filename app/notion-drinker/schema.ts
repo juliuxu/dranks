@@ -13,7 +13,7 @@ const alcoholSchema = z.object({
 export type Alcohol = z.infer<typeof alcoholSchema>;
 
 export const drinksMetainfo = z.object({
-  alchohols: z.array(alcoholSchema),
+  alcohols: z.array(alcoholSchema),
   lastEditedTime: z.string(),
 });
 export type DrinksMetainfo = z.infer<typeof drinksMetainfo>;

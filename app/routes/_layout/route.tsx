@@ -5,11 +5,11 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 
 import { Footer } from "./footer";
 import { Header } from "./header";
-import { getClient } from "@julianjark/notion-utils";
 import { config } from "~/config.server";
+import { notionClientCached } from "../../clients.server";
 
 export const loader = async () => {
-  const images = await getClient(config.notionToken).getImageAssets(
+  const images = await notionClientCached.getImageAssets(
     ["sitroner", "last-ned-fra-app-store"],
     {
       databaseId: config.imageAssetsDatabaseId,

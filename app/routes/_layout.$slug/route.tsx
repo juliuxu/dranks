@@ -16,7 +16,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const drink = (
     await getDrinks({
       notionToken: config.notionToken,
-      notionDatabaseId: config.drinksDatabaseId,
+      notionDatabaseId: config.notionDrinksDatabaseId,
     })
   ).find((drink) => slugify(drink.title) === params.slug);
   assertItemFound(drink);
