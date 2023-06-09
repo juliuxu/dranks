@@ -1,6 +1,6 @@
 import { LRUCache } from "lru-cache";
 import type { NotionTokenAndDatabaseId } from "./client";
-import { getDrinksAndMetaInfo } from "./client";
+import { getDrinksAndMetaInfo, getDrinkWithNotionBody } from "./client";
 
 const lruOptions = {
   max: 1000,
@@ -32,9 +32,32 @@ export function getCachedDrinksClient({
       }
     },
   });
+  const drinkWithNotionBodyCache = new LRUCache<
+    string,
+    Awaited<ReturnType<typeof getDrinkWithNotionBody>>
+  >({
+    ...lruOptions,
+    fetchMethod: async (notionPageId) => {
+      try {
+        return await getDrinkWithNotionBody({
+          notionToken,
+          notionPageId,
+        });
+      } catch (e) {
+        console.error("getDrinksAndMetaInfo: ❌ failed fetching or parsing", e);
+        throw e;
+      }
+    },
+  });
 
   const getDrinksAndMetaInfoCached = async () =>
     (await drinksAndMetainfoCache.fetch(""))!;
 
-  return { getDrinksAndMetaInfo: getDrinksAndMetaInfoCached };
+  const getDrinkWithNotionBodyCached = async (notionPageId: string) =>
+    (await drinkWithNotionBodyCache.fetch(notionPageId))!;
+
+  return {
+    getDrinksAndMetaInfo: getDrinksAndMetaInfoCached,
+    getDrinkWithNotionBody: getDrinkWithNotionBodyCached,
+  };
 }

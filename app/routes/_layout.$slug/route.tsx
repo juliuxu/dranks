@@ -7,26 +7,20 @@ import type {
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { config } from "~/config.server";
-import { getDrinkWithNotionBody, getDrinks } from "~/notion-drinker/client";
 import { assertItemFound } from "~/utils";
 import { dranksClasses } from "../_layout/route";
 import { NotionRender } from "@julianjark/notion-render";
+import { drinksClient, notionClientCached } from "~/clients.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
-  const drink = (
-    await getDrinks({
-      notionToken: config.notionToken,
-      notionDatabaseId: config.notionDrinksDatabaseId,
-    })
-  ).find((drink) => slugify(drink.title) === params.slug);
+  const drink = (await drinksClient.getDrinksAndMetaInfo()).drinks.find(
+    (drink) => slugify(drink.title) === params.slug
+  );
   assertItemFound(drink);
 
   const [drinkWithNotionBody, images] = await Promise.all([
-    getDrinkWithNotionBody({
-      notionToken: config.notionToken,
-      notionPageId: drink.id,
-    }),
-    getClient(config.notionToken).getImageAssets(["appelsiner"], {
+    drinksClient.getDrinkWithNotionBody(drink.id),
+    notionClientCached.getImageAssets(["appelsiner"], {
       databaseId: config.imageAssetsDatabaseId,
       titleProperty: "Navn",
       srcProperty: "Bilde",
