@@ -1,4 +1,4 @@
-import { getClient, slugify } from "@julianjark/notion-utils";
+import { slugify } from "@julianjark/notion-utils";
 import type {
   HeadersFunction,
   LoaderArgs,
