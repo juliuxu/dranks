@@ -14,11 +14,11 @@ export function useDebounceEffect<Args extends Array<unknown>>(
   fn: (...args: Args) => unknown,
   ms: number
 ) {
-  const de = useRef<(...args: Args) => unknown>();
-  if (de.current === undefined) {
-    de.current = () => debounceEffect(fn, ms);
+  const ref = useRef<(...args: Args) => unknown>();
+  if (ref.current === undefined) {
+    ref.current = () => debounceEffect(fn, ms);
   }
-  return de.current;
+  return ref.current;
 }
 
 export function assertItemFound<T>(item: T | undefined): asserts item is T {
