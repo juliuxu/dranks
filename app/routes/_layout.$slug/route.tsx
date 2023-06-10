@@ -40,6 +40,7 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
   {
     title: data?.drink.title,
   },
+  { name: "description", content: data?.drink.title },
 ];
 
 export default function DrinkView() {

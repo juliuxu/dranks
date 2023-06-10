@@ -71,6 +71,7 @@ export const meta: V2_MetaFunction = () => [
   {
     title: "Dranks",
   },
+  { name: "description", content: "Gode drinker og dranks" },
 ];
 
 export default function Dranks() {
