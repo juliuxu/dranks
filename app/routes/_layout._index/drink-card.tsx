@@ -21,6 +21,7 @@ export const DrankCard = ({ drink, index }: DrinkCardProps) => {
           background="auto"
           transformer={transform}
           style={{ backgroundPosition: "center" }}
+          alt=""
         />
         <span
           className="absolute bottom-0 p-4 text-2xl font-semibold text-white drop-shadow-lg"
