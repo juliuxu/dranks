@@ -42,6 +42,10 @@ export const links: LinksFunction = () => [
     rel: "manifest",
     href: manifest,
   },
+  {
+    rel: "preconnect",
+    href: "https://res.cloudinary.com",
+  },
 ];
 
 export default function App() {

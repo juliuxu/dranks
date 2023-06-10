@@ -5,8 +5,20 @@ import {
 } from "@julianjark/notion-image";
 import { config } from "~/config.server";
 
-export const notionImageApiPath = "/api/notion-image";
-export const imageUrlBuilder = createImageUrlBuilder(notionImageApiPath);
+const apiPath = "/api/notion-image";
+const imageUrlBuilder = createImageUrlBuilder(
+  new URL(apiPath, config.basePath).toString()
+);
+
+/**
+ * Optimize images with Cloudinary
+ * Browser -> Cloudinary -> This API -> Notion
+ */
+const cloudinaryImageUrlBuilder: typeof imageUrlBuilder = (...args) =>
+  `https://res.cloudinary.com/dxv2fa2wh/image/fetch/q_auto/${encodeURIComponent(
+    imageUrlBuilder(...args)
+  )}`;
+export { cloudinaryImageUrlBuilder as imageUrlBuilder };
 
 export const loader = async ({ request }: LoaderArgs) => {
   return getNotionImage(config.notionToken)(

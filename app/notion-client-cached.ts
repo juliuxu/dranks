@@ -1,7 +1,7 @@
 import { getClient } from "@julianjark/notion-utils";
 import { createGetImageAssets } from "@julianjark/notion-image";
 import { LRUCache } from "lru-cache";
-import { notionImageApiPath } from "./routes/api.notion-image";
+import { imageUrlBuilder } from "./routes/api.notion-image";
 
 const defaultLruOptions = {
   max: 1000,
@@ -13,7 +13,7 @@ const defaultLruOptions = {
 };
 export function getNotionClientCached(notionToken: string, lruOptions = {}) {
   const getImageAssets = createGetImageAssets({
-    apiPath: notionImageApiPath,
+    imageUrlBuilder,
     notionTokenOrClient: notionToken,
   });
   const client = { ...getClient(notionToken), getImageAssets };
