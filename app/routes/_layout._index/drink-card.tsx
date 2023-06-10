@@ -13,11 +13,28 @@ export const DrankCard = ({ drink, index }: DrinkCardProps) => {
     <Link prefetch="intent" to={`${slugify(drink.title)}`}>
       <div className="group relative bg-gradient-to-b from-cyan-400 via-green-200 to-yellow-200">
         <Image
-          width={300}
+          width={200}
           aspectRatio={1 / 1.2}
           src={drink.illustrationUrl}
           priority={index < 6}
-          className="transition-all duration-300 ease-in-out group-hover:scale-[1.1]"
+          className={
+            "lg:hidden " +
+            "transition-all duration-300 ease-in-out group-hover:scale-[1.1]"
+          }
+          background="auto"
+          transformer={transform}
+          style={{ backgroundPosition: "center" }}
+          alt=""
+        />
+        <Image
+          width={300}
+          aspectRatio={1 / 1.2}
+          src={drink.illustrationUrl}
+          loading="eager"
+          className={
+            "hidden lg:block " +
+            "transition-all duration-300 ease-in-out group-hover:scale-[1.1]"
+          }
           background="auto"
           transformer={transform}
           style={{ backgroundPosition: "center" }}
