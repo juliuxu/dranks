@@ -22,7 +22,7 @@ export type DrinksMetainfo = z.infer<typeof drinksMetainfo>;
 export const drinkSchema = z.object({
   id: z.string(),
   title: z.string(),
-  illustrationUrl: z.string().optional(),
+  illustrationUrl: z.string(),
   alcohol: alcoholSchema,
   tags: z.array(z.string()),
   groups: z.array(z.string()),
