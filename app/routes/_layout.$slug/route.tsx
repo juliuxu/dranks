@@ -11,6 +11,7 @@ import { assertItemFound } from "~/utils";
 import { dranksClasses } from "../_layout/route";
 import { NotionRender } from "@julianjark/notion-render";
 import { drinksClient, notionClientCached } from "~/clients.server";
+import { notionRenderComponents } from "~/components/notion-render-components";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const drink = (await drinksClient.getDrinksAndMetaInfo()).drinks.find(
@@ -57,7 +58,10 @@ export default function DrinkView() {
           <div>
             <div id="Forberedelser" className="absolute -top-10" />
             <h2 className="text-orange mb-5 text-2xl">Forberedelser</h2>
-            <NotionRender blocks={data.drink.preperations} />
+            <NotionRender
+              components={notionRenderComponents}
+              blocks={data.drink.preperations}
+            />
           </div>
         )}
 
@@ -67,14 +71,20 @@ export default function DrinkView() {
               <h2 className="text-orange mb-5 text-2xl" id="Ingredienser">
                 Du trenger
               </h2>
-              <NotionRender blocks={data.drink.ingredients} />
+              <NotionRender
+                components={notionRenderComponents}
+                blocks={data.drink.ingredients}
+              />
             </div>
 
             <div>
               <h2 className="text-orange mb-5 text-2xl" id="Fremgangsmåte">
                 Fremgangsmåte
               </h2>
-              <NotionRender blocks={data.drink.steps} />
+              <NotionRender
+                components={notionRenderComponents}
+                blocks={data.drink.steps}
+              />
             </div>
 
             {data.drink.notes && (
@@ -83,7 +93,10 @@ export default function DrinkView() {
                   Notater
                 </h2>
                 <div className="flex flex-wrap gap-10">
-                  <NotionRender blocks={data.drink.notes} />
+                  <NotionRender
+                    components={notionRenderComponents}
+                    blocks={data.drink.notes}
+                  />
                 </div>
               </div>
             )}
@@ -111,7 +124,10 @@ export default function DrinkView() {
               Referanser
             </h2>
             <div className="flex flex-wrap gap-10">
-              <NotionRender blocks={data.drink.references} />
+              <NotionRender
+                components={notionRenderComponents}
+                blocks={data.drink.references}
+              />
             </div>
           </div>
         )}
