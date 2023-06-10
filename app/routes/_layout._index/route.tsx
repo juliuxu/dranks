@@ -58,12 +58,21 @@ export const loader = async ({ request }: LoaderArgs) => {
     ),
   }));
 
-  return json({
-    alcohols: drinksMetainfo.alcohols,
-    drinks: drinksFiltered,
-    drinksByAlcohol,
-    filter,
-  });
+  return json(
+    {
+      alcohols: drinksMetainfo.alcohols,
+      drinks: drinksFiltered,
+      drinksByAlcohol,
+      filter,
+    },
+    {
+      headers: {
+        "Cache-Control": `public, max-age=${60}, must-revalidate, s-maxage=${60}, stale-while-revalidate=${
+          60 * 60 * 24 * 30
+        }`,
+      },
+    }
+  );
 };
 export let headers: HeadersFunction = ({ loaderHeaders }) => loaderHeaders;
 
