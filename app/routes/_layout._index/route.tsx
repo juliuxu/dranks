@@ -11,13 +11,13 @@ import {
   useNavigation,
   useSubmit,
 } from "@remix-run/react";
-
-import { dranksClasses } from "../_layout/route";
 import { z } from "zod";
+
+import { dranksClasses } from "~/routes/_layout/route";
 import { useDebounceEffect } from "~/utils";
 import type { Alcohol } from "~/notion-drinker/schema";
-import { DrankCard } from "./drink-card";
 import { drinksClient } from "~/clients.server";
+import { DrankCard } from "./drink-card";
 
 const querySchema = z.object({
   q: z.string().optional(),
@@ -28,9 +28,7 @@ const querySchema = z.object({
 });
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const startFetchTime = performance.now();
   const { drinks, drinksMetainfo } = await drinksClient.getDrinksAndMetaInfo();
-  const fetchTime = Math.round(performance.now() - startFetchTime);
 
   // Filtering
   const { searchParams } = new URL(request.url);
@@ -60,19 +58,12 @@ export const loader = async ({ request }: LoaderArgs) => {
     ),
   }));
 
-  return json(
-    {
-      alcohols: drinksMetainfo.alcohols,
-      drinks: drinksFiltered,
-      drinksByAlcohol,
-      filter,
-    },
-    {
-      headers: {
-        "Server-Timing": `fetch;dur=${fetchTime}`,
-      },
-    }
-  );
+  return json({
+    alcohols: drinksMetainfo.alcohols,
+    drinks: drinksFiltered,
+    drinksByAlcohol,
+    filter,
+  });
 };
 export let headers: HeadersFunction = ({ loaderHeaders }) => loaderHeaders;
 

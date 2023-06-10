@@ -5,9 +5,9 @@ import type {
 } from "@julianjark/notion-utils";
 import {
   getTitle,
-  getCover,
   getSelectAndColor,
   getMultiSelect,
+  getCover,
 } from "@julianjark/notion-utils";
 import type { DrinksMetainfo, Drink, DrinkNotionBlocksBody } from "./schema";
 import { drinkNotionBlocksBodySchema } from "./schema";
@@ -16,6 +16,7 @@ import { drinksMetainfo } from "./schema";
 import type { Relaxed } from "./utils";
 import { safeParseList } from "./utils";
 import { takeItemsIfHeaderMatches } from "./utils";
+import { imageUrlBuilder } from "~/routes/api.notion-image";
 
 export function parseDrinksMetainfo(fromDatabase: DatabaseObjectResponse) {
   const alcohol = fromDatabase.properties["Alkohol"];
@@ -35,7 +36,12 @@ export function mapDrink(fromPage: PageObjectResponse) {
   return {
     id: fromPage.id,
     title: getTitle(fromPage),
-    illustrationUrl: getCover(fromPage),
+    illustrationUrl:
+      getCover(fromPage) &&
+      imageUrlBuilder({
+        type: "page-cover",
+        pageId: fromPage.id,
+      }),
     alcohol: getSelectAndColor("Alkohol", fromPage),
     tags: getMultiSelect("Tags", fromPage),
     groups: getMultiSelect("Gruppering", fromPage),

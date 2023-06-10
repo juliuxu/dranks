@@ -1,5 +1,7 @@
 import { getClient } from "@julianjark/notion-utils";
+import { createGetImageAssets } from "@julianjark/notion-image";
 import { LRUCache } from "lru-cache";
+import { notionImageApiPath } from "./routes/api.notion-image";
 
 const defaultLruOptions = {
   max: 1000,
@@ -10,7 +12,11 @@ const defaultLruOptions = {
   noDeleteOnFetchRejection: true,
 };
 export function getNotionClientCached(notionToken: string, lruOptions = {}) {
-  const client = getClient(notionToken);
+  const getImageAssets = createGetImageAssets({
+    apiPath: notionImageApiPath,
+    notionTokenOrClient: notionToken,
+  });
+  const client = { ...getClient(notionToken), getImageAssets };
 
   const cache = new LRUCache<string, any>({
     ...defaultLruOptions,
@@ -37,7 +43,7 @@ export function getNotionClientCached(notionToken: string, lruOptions = {}) {
   ) =>
     (await cache.fetch(JSON.stringify({ method: "getDatabasePages", args })))!;
 
-  const getImageAssetsCached: typeof client.getImageAssets = async (...args) =>
+  const getImageAssetsCached: typeof getImageAssets = async (...args) =>
     (await cache.fetch(JSON.stringify({ method: "getImageAssets", args })))!;
 
   return {
