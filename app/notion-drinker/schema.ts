@@ -35,7 +35,7 @@ export const drinkNotionBlocksBodySchema = z.object({
   ingredients: z.array(blockSchema),
   steps: z.array(blockSchema),
   notes: z.array(blockSchema).optional(),
-  references: z.array(blockSchema),
+  references: z.array(blockSchema).optional(),
 });
 export type DrinkNotionBlocksBody = z.infer<typeof drinkNotionBlocksBodySchema>;
 

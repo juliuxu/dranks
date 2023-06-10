@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@julianjark/notion-image": "0.5.0",
-    "@julianjark/notion-render": "0.2.0",
+    "@julianjark/notion-render": "0.3.0",
     "@julianjark/notion-utils": "0.4.0",
     "@remix-run/css-bundle": "^1.17.0",
     "@remix-run/node": "^1.17.0",

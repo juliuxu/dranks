@@ -115,6 +115,11 @@ export function mapNotionDrinkBody(fromBlocks: BlockObjectResponse[]) {
       result.steps = recursiveResult.steps ?? result.steps;
     }
   }
+  // Remove empty arrays
+  if (result.preperations?.length === 0) result.preperations = undefined;
+  if (result.notes?.length === 0) result.notes = undefined;
+  if (result.references?.length === 0) result.references = undefined;
+
   return result;
 }
 export function safeParseNotionDrinkBody(fromBlocks: BlockObjectResponse[]) {
