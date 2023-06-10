@@ -34,7 +34,15 @@ export async function getDrinks({
 }: NotionTokenAndDatabaseId) {
   const client = getClient(notionToken);
 
-  const pages = await client.getDatabasePages(notionDatabaseId);
+  const pages = await client.getDatabasePages(notionDatabaseId, {
+    sorts: [{ timestamp: "created_time", direction: "ascending" }],
+    filter: {
+      property: "Gruppering",
+      multi_select: {
+        contains: "🌐",
+      },
+    },
+  });
   const [drinks, unparsed] = safeParseDrinks(pages);
   if (unparsed.length > 0) {
     console.error("Failed to parse the following drinks", unparsed);
