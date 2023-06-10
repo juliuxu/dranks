@@ -18,5 +18,11 @@ export async function warmUpCache() {
 
 // Warm the cache on startup
 if (process.env.NODE_ENV === "production") {
-  warmUpCache();
+  (async () => {
+    console.log("🛢️ Warming up cache...");
+    const start = performance.now();
+    await warmUpCache();
+    const end = performance.now();
+    console.log(`✅ Cache warmed up! Took ${end - start}ms`);
+  })();
 }
