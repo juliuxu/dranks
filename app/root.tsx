@@ -52,7 +52,7 @@ export default function App() {
   return (
     <html lang="no">
       <head>
-        <meta name="theme-color" content="#F9A613" />
+        {/* <meta name="theme-color" content="#F9A613" /> */}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
