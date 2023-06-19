@@ -44,5 +44,8 @@ COPY --from=build /app/public /app/public
 
 WORKDIR /app
 
+# Set production environment
+ENV NODE_ENV=production
+
 EXPOSE 3000
 CMD [ "/app/node_modules/.bin/remix-serve", "/app/build" ]
