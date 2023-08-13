@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, useSearchParams } from "@remix-run/react";
 import { Image } from "@unpic/react";
 import { slugify } from "@julianjark/notion-utils";
 import type { Drink } from "~/notion-drinker/schema";
@@ -9,6 +9,8 @@ interface DrinkCardProps {
   index: number;
 }
 export const DrankCard = ({ drink, index }: DrinkCardProps) => {
+  const [searchParams] = useSearchParams();
+  const screenshot = searchParams.get("screenshot") === "true";
   return (
     <Link prefetch="intent" to={`${slugify(drink.title)}`}>
       <div className="group relative bg-gradient-to-b from-cyan-400 via-green-200 to-yellow-200">
@@ -21,7 +23,7 @@ export const DrankCard = ({ drink, index }: DrinkCardProps) => {
             "lg:hidden " +
             "transition-all duration-300 ease-in-out group-hover:scale-[1.1]"
           }
-          background="auto"
+          background={screenshot ? undefined : "auto"}
           transformer={transform}
           style={{ backgroundPosition: "center" }}
           alt=""
@@ -35,7 +37,7 @@ export const DrankCard = ({ drink, index }: DrinkCardProps) => {
             "hidden lg:block " +
             "transition-all duration-300 ease-in-out group-hover:scale-[1.1]"
           }
-          background="auto"
+          background={screenshot ? undefined : "auto"}
           transformer={transform}
           style={{ backgroundPosition: "center" }}
           alt=""
